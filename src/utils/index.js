@@ -19,4 +19,15 @@ const mapDBToModel = ({
   albumId: album_id,
 });
 
-module.exports = mapDBToModel;
+const filterTitleByParam = (song, title) => (
+  song.title.toLowerCase().includes(title)
+);
+const filterPerformerByParam = (song, performer) => (
+  song.performer.toLowerCase().includes(performer)
+);
+
+module.exports = {
+  mapDBToModel,
+  filterTitleByParam,
+  filterPerformerByParam,
+};

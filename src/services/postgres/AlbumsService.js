@@ -14,7 +14,7 @@ class AlbumsService {
     const id = nanoid(16);
 
     const query = {
-      text: 'INSERT INTO notes VALUES($1, $2, $3) RETURNING id',
+      text: 'INSERT INTO albums VALUES($1, $2, $3) RETURNING id',
       values: [id, name, year],
     };
 
@@ -33,17 +33,26 @@ class AlbumsService {
   }
 
   async getAlbumById(id) {
-    const query = {
+    const queryAlbum = {
       text: 'SELECT * FROM albums WHERE id = $1',
       values: [id],
     };
-    const result = await this._pool.query(query);
+    const querySong = {
+      text: 'SELECT songs.id, songs.title, songs.performer FROM songs INNER JOIN albums ON albums.id=songs."album_id" WHERE albums.id=$1',
+      values: [id],
+    };
+    const resultAlbum = await this._pool.query(queryAlbum);
+    const resultSong = await this._pool.query(querySong);
 
-    if (!result.rows.length) {
+    if (!resultAlbum.rows.length) {
       throw new NotFoundError('Album tidak ditemukan');
     }
-
-    return result.rows.map(mapDBToModel)[0];
+    return {
+      id: resultAlbum.rows[0].id,
+      name: resultAlbum.rows[0].name,
+      year: resultAlbum.rows[0].year,
+      songs: resultSong.rows,
+    };
   }
 
   async editAlbumById(id, { name, year }) {
@@ -61,7 +70,7 @@ class AlbumsService {
 
   async deleteAlbumById(id) {
     const query = {
-      text: 'DELETE FROM album WHERE id = $1 RETURNING id',
+      text: 'DELETE FROM albums WHERE id = $1 RETURNING id',
       values: [id],
     };
 
