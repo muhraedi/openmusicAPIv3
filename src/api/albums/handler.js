@@ -2,8 +2,9 @@
 const autoBind = require('auto-bind');
 
 class AlbumsHandler {
-  constructor(service, validator) {
+  constructor(service, songsService, validator) {
     this._service = service;
+    this._songsService = songsService;
     this._validator = validator;
 
     autoBind(this);
@@ -27,6 +28,7 @@ class AlbumsHandler {
 
   async getAlbumsHandler() {
     const albums = await this._service.getAlbums();
+
     return {
       status: 'success',
       data: {
@@ -37,7 +39,17 @@ class AlbumsHandler {
 
   async getAlbumByIdHandler(request) {
     const { id } = request.params;
+
     const album = await this._service.getAlbumById(id);
+    let songs = await this._songsService.getSongsByAlbumId(id);
+
+    songs = songs.map((song) => ({
+      id: song.id,
+      title: song.title,
+      performer: song.performer,
+    }));
+
+    album.songs = songs;
     return {
       status: 'success',
       data: {
@@ -60,7 +72,9 @@ class AlbumsHandler {
 
   async deleteAlbumByIdHandler(request) {
     const { id } = request.params;
+
     await this._service.deleteAlbumById(id);
+
     return {
       status: 'success',
       message: 'Album berhasil dihapus',
