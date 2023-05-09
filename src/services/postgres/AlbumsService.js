@@ -19,9 +19,7 @@ class AlbumsService {
 
     const result = await this._pool.query(query);
 
-    if (!result.rows[0].id) {
-      throw new InvariantError('Album gagal ditambahkan');
-    }
+    if (!result.rows[0].id) throw new InvariantError('Album gagal ditambahkan');
 
     return result.rows[0].id;
   }
@@ -32,26 +30,16 @@ class AlbumsService {
   }
 
   async getAlbumById(id) {
-    const queryAlbum = {
+    const query = {
       text: 'SELECT * FROM albums WHERE id = $1',
       values: [id],
     };
-    const querySong = {
-      text: 'SELECT songs.id, songs.title, songs.performer FROM songs INNER JOIN albums ON albums.id=songs."album_id" WHERE albums.id=$1',
-      values: [id],
-    };
-    const resultAlbum = await this._pool.query(queryAlbum);
-    const resultSong = await this._pool.query(querySong);
 
-    if (!resultAlbum.rowCount) {
-      throw new NotFoundError('Album tidak ditemukan');
-    }
-    return {
-      id: resultAlbum.rows[0].id,
-      name: resultAlbum.rows[0].name,
-      year: resultAlbum.rows[0].year,
-      songs: resultSong.rows,
-    };
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount) throw new NotFoundError('Album tidak ditemukan');
+
+    return result.rows[0];
   }
 
   async editAlbumById(id, { name, year }) {
@@ -62,9 +50,7 @@ class AlbumsService {
 
     const result = await this._pool.query(query);
 
-    if (!result.rowCount) {
-      throw new NotFoundError('Gagal memperbarui album. Id tidak ditemukan');
-    }
+    if (!result.rowCount) throw new NotFoundError('Gagal memperbarui album. Id tidak ditemukan');
   }
 
   async deleteAlbumById(id) {
@@ -75,9 +61,7 @@ class AlbumsService {
 
     const result = await this._pool.query(query);
 
-    if (!result.rowCount) {
-      throw new NotFoundError('Album gagal dihapus. Id tidak ditemukan');
-    }
+    if (!result.rowCount) throw new NotFoundError('Album gagal dihapus. Id tidak ditemukan');
   }
 }
 

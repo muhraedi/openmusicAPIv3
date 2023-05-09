@@ -31,9 +31,7 @@ class SongsService {
 
     const result = await this._pool.query(query);
 
-    if (!result.rows[0].id) {
-      throw new InvariantError('Lagu gagal ditambahkan');
-    }
+    if (!result.rows[0].id) throw new InvariantError('Lagu gagal ditambahkan');
 
     return result.rows[0].id;
   }
@@ -47,12 +45,8 @@ class SongsService {
 
     const songs = result.rows;
     let filteredSong = songs;
-    if ('title' in song) {
-      filteredSong = filteredSong.filter((s) => filterTitleByParam(s, song.title));
-    }
-    if ('performer' in song) {
-      filteredSong = filteredSong.filter((s) => filterPerformerByParam(s, song.performer));
-    }
+    if ('title' in song) filteredSong = filteredSong.filter((s) => filterTitleByParam(s, song.title));
+    if ('performer' in song) filteredSong = filteredSong.filter((s) => filterPerformerByParam(s, song.performer));
 
     return filteredSong;
   }
@@ -64,11 +58,20 @@ class SongsService {
     };
     const result = await this._pool.query(query);
 
-    if (!result.rowCount) {
-      throw new NotFoundError('Lagu tidak ditemukan');
-    }
+    if (!result.rowCount) throw new NotFoundError('Lagu tidak ditemukan');
 
     return result.rows.map(mapDBToModel)[0];
+  }
+
+  async getSongsByAlbumId(albumId) {
+    const query = {
+      text: 'SELECT songs.id, songs.title, songs.performer FROM songs WHERE album_id = $1',
+      values: [albumId],
+    };
+
+    const result = await this._pool.query(query);
+
+    return result.rows;
   }
 
   async editSongById(id, {
@@ -85,9 +88,7 @@ class SongsService {
 
     const result = await this._pool.query(query);
 
-    if (!result.rowCount) {
-      throw new NotFoundError('Gagal memperbarui lagu. Id tidak ditemukan');
-    }
+    if (!result.rowCount) throw new NotFoundError('Gagal memperbarui lagu. Id tidak ditemukan');
   }
 
   async deleteSongById(id) {
@@ -98,9 +99,7 @@ class SongsService {
 
     const result = await this._pool.query(query);
 
-    if (!result.rowCount) {
-      throw new NotFoundError('Lagu gagal dihapus. Id tidak ditemukan');
-    }
+    if (!result.rowCount) throw new NotFoundError('Lagu gagal dihapus. Id tidak ditemukan');
   }
 }
 
