@@ -64,7 +64,6 @@ const mapDBToModelActivity = (dataFromDB) => {
 
     data.activities.push(activity);
   });
-
   return data;
 };
 

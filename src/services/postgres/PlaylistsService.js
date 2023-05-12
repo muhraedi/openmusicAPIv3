@@ -63,10 +63,7 @@ class PlaylistsService {
     };
 
     const result = await this._pool.query(query);
-
-    if (!result.rowCount) {
-      throw new NotFoundError('Playlist tidak ditemukan');
-    }
+    if (!result.rowCount) throw new NotFoundError('Playlist tidak ditemukan');
 
     const playlist = result.rows[0];
 
@@ -79,9 +76,7 @@ class PlaylistsService {
     try {
       await this.verifyPlaylistOwner(playlistId, userId);
     } catch (error) {
-      if (error instanceof NotFoundError) {
-        throw error;
-      }
+      if (error instanceof NotFoundError) throw error;
       try {
         await this._collaborationService.verifyCollaborator(playlistId, userId);
       } catch {
