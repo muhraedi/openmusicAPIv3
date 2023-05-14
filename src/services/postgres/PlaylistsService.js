@@ -22,9 +22,7 @@ class PlaylistsService {
 
     const result = await this._pool.query(query);
 
-    if (!result.rows[0].id) {
-      throw new InvariantError('Playlist gagal ditambahkan');
-    }
+    if (!result.rows[0].id) throw new InvariantError('Playlist gagal ditambahkan');
 
     return result.rows[0].id;
   }
@@ -51,9 +49,7 @@ class PlaylistsService {
 
     const result = await this._pool.query(query);
 
-    if (!result.rowCount) {
-      throw new NotFoundError('Playlist gagal dihapus. Id tidak ditemukan');
-    }
+    if (!result.rowCount) throw new NotFoundError('Playlist gagal dihapus. Id tidak ditemukan');
   }
 
   async verifyPlaylistOwner(id, owner) {
@@ -63,13 +59,12 @@ class PlaylistsService {
     };
 
     const result = await this._pool.query(query);
+
     if (!result.rowCount) throw new NotFoundError('Playlist tidak ditemukan');
 
     const playlist = result.rows[0];
 
-    if (playlist.owner !== owner) {
-      throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
-    }
+    if (playlist.owner !== owner) throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
   }
 
   async verifyPlaylistAccess(playlistId, userId) {
@@ -95,9 +90,8 @@ class PlaylistsService {
 
     const result = await this._pool.query(query);
 
-    if (!result.rows.length) {
-      throw new InvariantError('Song Activity gagal ditambahkan');
-    }
+    if (!result.rows.length) throw new InvariantError('Song Activity gagal ditambahkan');
+
     return result.rows[0].id;
   }
 

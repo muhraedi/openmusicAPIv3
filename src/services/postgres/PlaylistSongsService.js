@@ -23,9 +23,7 @@ class PlaylistSongsService {
 
     const result = await this._pool.query(query);
 
-    if (!result.rowCount) {
-      throw new InvariantError('Playlist song gagal ditambahkan');
-    }
+    if (!result.rowCount) throw new InvariantError('Playlist song gagal ditambahkan');
 
     return result.rows[0].id;
   }
@@ -44,11 +42,10 @@ class PlaylistSongsService {
 
     const result = await this._pool.query(query);
 
-    if (!result.rowCount) {
-      throw new NotFoundError('Playlist tidak ditemukan');
-    }
+    if (!result.rowCount) throw new NotFoundError('Playlist tidak ditemukan');
 
     const playlist = mapDBToModelPlaylist(result.rows);
+
     return playlist;
   }
 
@@ -60,9 +57,7 @@ class PlaylistSongsService {
 
     const result = await this._pool.query(query);
 
-    if (!result.rowCount) {
-      throw new InvariantError('Playlist song gagal dihapus');
-    }
+    if (!result.rowCount) throw new InvariantError('Playlist song gagal dihapus');
   }
 }
 
