@@ -11,4 +11,9 @@ const AlbumPayloadSchema = Joi.object({
     .required(),
 });
 
-module.exports = { AlbumPayloadSchema };
+const AlbumLikesPayloadSchema = Joi.object({
+  userId: Joi.string().required(),
+  albumId: Joi.string().required(),
+});
+
+module.exports = { AlbumPayloadSchema, AlbumLikesPayloadSchema };

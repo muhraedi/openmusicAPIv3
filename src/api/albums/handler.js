@@ -41,15 +41,7 @@ class AlbumsHandler {
     const { id } = request.params;
 
     const album = await this._service.getAlbumById(id);
-    let songs = await this._songsService.getSongsByAlbumId(id);
 
-    songs = songs.map((song) => ({
-      id: song.id,
-      title: song.title,
-      performer: song.performer,
-    }));
-
-    album.songs = songs;
     return {
       status: 'success',
       data: {
