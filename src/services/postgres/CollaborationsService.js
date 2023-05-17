@@ -13,14 +13,14 @@ class CollaborationsService {
   async addCollaboration(playlistId, userId) {
     const id = `collab-${nanoid(16)}`;
 
-    const q2 = {
+    const queryUserId = {
       text: 'SELECT * FROM users where id = $1',
       values: [userId],
     };
 
-    const r2 = await this._pool.query(q2);
+    const resultUserId = await this._pool.query(queryUserId);
 
-    if (!r2.rowCount) throw new NotFoundError('User tidak ditemukan');
+    if (!resultUserId.rowCount) throw new NotFoundError('User tidak ditemukan');
 
     const query = {
       text: 'INSERT INTO collaborations VALUES($1, $2, $3) RETURNING id',
