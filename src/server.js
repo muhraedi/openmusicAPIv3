@@ -42,7 +42,6 @@ const PlaylistSongsService = require('./services/postgres/PlaylistSongsService')
 const PlaylistSongsValidator = require('./validator/playlistSongs');
 
 // Exports
-// eslint-disable-next-line no-underscore-dangle
 const _exports = require('./api/exports');
 const ProducerService = require('./services/rabbitmq/ProducerService');
 const ExportsValidator = require('./validator/exports');

@@ -1,7 +1,3 @@
-/* eslint-disable camelcase */
-
-exports.shorthands = undefined;
-
 exports.up = (pgm) => {
   // membuat table user_album_likes
   pgm.createTable('user_album_likes', {

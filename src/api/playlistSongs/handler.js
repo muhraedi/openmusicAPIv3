@@ -1,6 +1,5 @@
 const autoBind = require('auto-bind');
 
-/* eslint-disable no-underscore-dangle */
 class PlaylistSongsHandler {
   constructor(playlistSongsService, playlistsService, validator) {
     this._playlistSongsService = playlistSongsService;
